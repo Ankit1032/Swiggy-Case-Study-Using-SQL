@@ -1,12 +1,12 @@
 -----
---1. Find customers who have never ordered
+--1. How many customers have not placed any orders?
 select user_id from users
 where user_id not in (
     select distinct user_id from orders
     where user_id is not null
 );
 
---2a. Average price of each food type
+--2a. What is the average price of each food type?
  with food_details as(
     select * from food f
     inner join menu m
@@ -19,7 +19,7 @@ from food_details
 group by type
 order by "Average Price" desc;
 
---2b. Average price of food in each restaurants
+--2b. What is the average price of food for each restaurant?
 with restaurant_details as (
     select * from restaurants r
     inner join orders o
@@ -72,7 +72,7 @@ WHERE res_rank = 1
 ORDER BY EXTRACT(month FROM TO_DATE(order_month, 'Month'));
 
 
---4. Find the top restaurant in terms of the number of orders for a  month = June
+--4. Find the top restaurant in terms of the number of orders for the month of June
 SELECT *
 FROM restaurants r
 INNER JOIN orders o
@@ -81,7 +81,7 @@ WHERE TRIM(TO_CHAR(o.ORDER_DATE, 'Month')) = 'June';
 
 Note : The reason we use TRIM function is because TO_CHAR() takes the trailing spaces. So TRIM is used to remove any unecessary space.
 
---5. Restaurants with monthly sales greater than 500.
+--5. Restaurants with monthly revenue greater than 500.
 with res as (
 SELECT to_char(o.order_date,'Month') as order_month ,r.r_name, sum(m.price) as price
 FROM restaurants r
@@ -104,7 +104,7 @@ on u.user_id = o.user_id
 where u.user_id = 1 and 
 o.order_date between to_date('15-05-22','DD-MM-YY') and to_date('15-06-22','DD-MM-YY');
 
---7. Find restaurants with max repeated customers
+--7. Which restaurant has the highest number of repeat customers?
 with repeated_cust as (
 select r.r_name,o.user_id,count(*) as order_count from restaurants r
 inner join orders o
@@ -133,7 +133,7 @@ from month_rev
 ;
 
 
---9. Top 3 most ordered dish
+--9. Find the top 3 most ordered dish
 
 --Using FETCH
 select F_NAME,count(*) as order_count from order_details od
